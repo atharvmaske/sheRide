@@ -1,25 +1,39 @@
 import React, { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import { Link } from 'react-router-dom'; 
-import './Auth.css'; 
+import { Link } from 'react-router-dom';
+import { auth, db } from '../firebase';  
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { setDoc, doc } from 'firebase/firestore';
+import './Auth.css';
 
 const Registration = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [error, setError] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (password !== confirmPassword) {
             alert("Passwords do not match!");
             return;
         }
-        console.log('Registration Submitted', { email, password });
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            await setDoc(doc(db, 'users', userCredential.user.uid), {
+                email,
+                createdAt: new Date(),
+            });
+            alert('Registration successful');
+        } catch (err) {
+            setError('Failed to register: ' + err.message);
+        }
     };
 
     return (
         <div className="auth-container">
             <h2>Register</h2>
+            {error && <p className="error-text">{error}</p>}
             <Form onSubmit={handleSubmit}>
                 <Form.Group controlId="formEmail">
                     <Form.Label>Email address</Form.Label>
@@ -59,7 +73,7 @@ const Registration = () => {
                 </Button>
             </Form>
             <p className="mt-3">
-                Already have an account? <Link to="/login">Login here</Link>
+                Already have an account? <Link to="/Login">Login here</Link>
             </p>
         </div>
     );

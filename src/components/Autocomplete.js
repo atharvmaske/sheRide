@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Autocomplete = ({ query, setQuery, suggestions, setSuggestions, type }) => {
+    const [selected, setSelected] = useState(false);
+
     const fetchSuggestions = async () => {
         const endpoint = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&addressdetails=1&limit=5`;
         try {
@@ -13,8 +15,10 @@ const Autocomplete = ({ query, setQuery, suggestions, setSuggestions, type }) =>
     };
 
     const handleInputChange = (e) => {
-        setQuery(e.target.value);
-        if (e.target.value.length > 2) {
+        const queryValue = e.target.value;
+        setQuery(queryValue);
+        setSelected(false); 
+        if (queryValue.length > 2) {
             fetchSuggestions();
         } else {
             setSuggestions([]);
@@ -24,7 +28,15 @@ const Autocomplete = ({ query, setQuery, suggestions, setSuggestions, type }) =>
     const selectSuggestion = (item) => {
         setQuery(item.display_name);
         setSuggestions([]);
+        setSelected(true);
+        document.activeElement.blur(); 
     };
+
+    useEffect(() => {
+        if (!query || selected) {
+            setSuggestions([]);
+        }
+    }, [query, selected]);
 
     return (
         <div className="autocomplete-container">
@@ -35,9 +47,9 @@ const Autocomplete = ({ query, setQuery, suggestions, setSuggestions, type }) =>
                 placeholder={`Enter ${type} location`}
                 className="autocomplete-input"
             />
-            {query.length > 2 && (
+            {query.length > 2 && !selected && (
                 <ul className="autocomplete-results">
-                    {suggestions.length > 0 &&
+                    {suggestions.length > 0 ? (
                         suggestions.map((item) => (
                             <li
                                 key={item.place_id}
@@ -46,7 +58,10 @@ const Autocomplete = ({ query, setQuery, suggestions, setSuggestions, type }) =>
                             >
                                 {item.display_name}
                             </li>
-                        ))}
+                        ))
+                    ) : (
+                        <li className="autocomplete-item">No suggestions found</li>
+                    )}
                 </ul>
             )}
         </div>

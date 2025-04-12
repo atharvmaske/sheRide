@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
-import Autocomplete from './Autocomplete';  // Import Autocomplete component
+import Autocomplete from './Autocomplete';
+import { db } from '../firebase';
+import { useAuth } from '../AuthContext';
+import { collection, addDoc } from 'firebase/firestore';
 import './BookRide.css';
 
 const BookRide = () => {
+    const { currentUser } = useAuth();
+
     const [pickup, setPickup] = useState('');
     const [dropoff, setDropoff] = useState('');
     const [date, setDate] = useState('');
@@ -11,9 +16,35 @@ const BookRide = () => {
     const [pickupSuggestions, setPickupSuggestions] = useState([]);
     const [dropoffSuggestions, setDropoffSuggestions] = useState([]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log({ pickup, dropoff, date, time });
+
+        if (!currentUser) {
+            alert("Please log in to book a ride.");
+            return;
+        }
+
+        const bookingData = {
+            pickup,
+            dropoff,
+            date,
+            time,
+            createdAt: new Date(),
+        };
+
+        try {
+            const rideRef = collection(db, 'users', currentUser.uid, 'rideBookings');
+            await addDoc(rideRef, bookingData);
+            alert('Ride booked successfully!');
+            // Clear form
+            setPickup('');
+            setDropoff('');
+            setDate('');
+            setTime('');
+        } catch (error) {
+            console.error("Error adding document: ", error);
+            alert("Failed to book ride: " + error.message);
+        }
     };
 
     return (
