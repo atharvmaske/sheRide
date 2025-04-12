@@ -1,4 +1,4 @@
-# Site is live at [https://atharvmaske.github.io/](https://atharvmaske.github.io/)
+# Site is live at [https://atharvmaske.github.io/sheRide](https://atharvmaske.github.io/sheRide)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
