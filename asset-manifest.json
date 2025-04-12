@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/sheRide/static/css/main.9627d999.css",
+    "main.js": "/sheRide/static/js/main.1fa18ba3.js",
+    "static/js/453.3d415453.chunk.js": "/sheRide/static/js/453.3d415453.chunk.js",
+    "static/media/payment.jpg": "/sheRide/static/media/payment.7256f5737d4721806539.jpg",
+    "static/media/time.jpg": "/sheRide/static/media/time.b87b36564865e66c1fe4.jpg",
+    "static/media/distance.jpeg": "/sheRide/static/media/distance.5b4f747136cff396e605.jpeg",
+    "index.html": "/sheRide/index.html",
+    "main.9627d999.css.map": "/sheRide/static/css/main.9627d999.css.map",
+    "main.1fa18ba3.js.map": "/sheRide/static/js/main.1fa18ba3.js.map",
+    "453.3d415453.chunk.js.map": "/sheRide/static/js/453.3d415453.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.9627d999.css",
+    "static/js/main.1fa18ba3.js"
+  ]
+}
